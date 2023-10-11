@@ -86,7 +86,7 @@ public class SwiftFirebaseGameServicesApplePlugin: NSObject, FlutterPlugin {
         }
 
     public static func register(with registrar: FlutterPluginRegistrar) {
-        let channel = FlutterMethodChannel(name: "firebase_game_services", binaryMessenger: registrar.messenger())
+		let channel = FlutterMethodChannel(name: "firebase_game_services", binaryMessenger: registrar.messenger)
         let instance = SwiftFirebaseGameServicesApplePlugin()
         registrar.addMethodCallDelegate(instance, channel: channel)
     }
@@ -97,9 +97,15 @@ public class SwiftFirebaseGameServicesApplePlugin: NSObject, FlutterPlugin {
         }
     }
 
+#if os(iOS)
     var viewController : UIViewController? {
         return UIApplication.shared.keyWindow?.rootViewController
     }
+	#else
+	var viewController : NSViewController? {
+		return NSApplication.shared.keyWindow?.contentViewController
+	}
+#endif
 
     // Mark - Authentication
     
@@ -177,7 +183,7 @@ public class SwiftFirebaseGameServicesApplePlugin: NSObject, FlutterPlugin {
                     #if os(iOS)
                     self.viewController?.present(vc, animated: true, completion: nil)
                     #else
-                    self.viewController.presentAsSheet(vc)
+					self.viewController?.presentAsSheet(vc)
                     #endif
                 } else if player.isAuthenticated {
                     self.getCredentialsAndSignIn(result: result)
@@ -216,7 +222,7 @@ public class SwiftFirebaseGameServicesApplePlugin: NSObject, FlutterPlugin {
                     #if os(iOS)
                     self.viewController?.present(vc, animated: true, completion: nil)
                     #else
-                    self.viewController.presentAsSheet(vc)
+                    self.viewController?.presentAsSheet(vc)
                     #endif
                 } else if player.isAuthenticated {
                     self.getCredentialsAndLink(user: user!, forceSignInIfCredentialAlreadyUsed: forceSignInIfCredentialAlreadyUsed, result: result)
@@ -240,7 +246,7 @@ public class SwiftFirebaseGameServicesApplePlugin: NSObject, FlutterPlugin {
         #if os(iOS)
         self.viewController?.present(vc, animated: true, completion: nil)
         #else
-        self.viewController.presentAsSheet(vc)
+        self.viewController?.presentAsSheet(vc)
         #endif
     }
     
@@ -252,7 +258,7 @@ public class SwiftFirebaseGameServicesApplePlugin: NSObject, FlutterPlugin {
         #if os(iOS)
         self.viewController?.present(vc, animated: true, completion: nil)
         #else
-        self.viewController.presentAsSheet(vc)
+        self.viewController?.presentAsSheet(vc)
         #endif
     }
 
@@ -277,7 +283,7 @@ public class SwiftFirebaseGameServicesApplePlugin: NSObject, FlutterPlugin {
         #if os(iOS)
         self.viewController?.present(vc, animated: true, completion: nil)
         #else
-        self.viewController.presentAsSheet(vc)
+        self.viewController?.presentAsSheet(vc)
         #endif
     }
 
@@ -303,7 +309,7 @@ public class SwiftFirebaseGameServicesApplePlugin: NSObject, FlutterPlugin {
     // MARK: - AccessPoint
 
     private func showAccessPoint(location: String, showHighlights: Bool, result: @escaping FlutterResult) {
-        if #available(iOS 14.0, *) {
+		if #available(iOS 14.0, *), #available(macOS 11.0, *) {
         var gkLocation: GKAccessPoint.Location = .topLeading
         switch location {
         case "topLeading":
@@ -327,7 +333,7 @@ public class SwiftFirebaseGameServicesApplePlugin: NSObject, FlutterPlugin {
     }
   
     private func hideAccessPoint(result: @escaping FlutterResult) {
-        if #available(iOS 14.0, *) {
+        if #available(iOS 14.0, *), #available(macOS 11.0, *) {
             GKAccessPoint.shared.isActive = false
             result(nil)
         } else {
@@ -345,7 +351,7 @@ public class SwiftFirebaseGameServicesApplePlugin: NSObject, FlutterPlugin {
         #if os(iOS)
         self.viewController?.present(vc, animated: true, completion: nil)
         #else
-        self.viewController.presentAsSheet(vc)
+        self.viewController?.presentAsSheet(vc)
         #endif
     }
 
@@ -357,7 +363,7 @@ public class SwiftFirebaseGameServicesApplePlugin: NSObject, FlutterPlugin {
         #if os(iOS)
         self.viewController?.present(vc, animated: true, completion: nil)
         #else
-        self.viewController.presentAsSheet(vc)
+        self.viewController?.presentAsSheet(vc)
         #endif
     }
 
@@ -394,7 +400,7 @@ public class SwiftFirebaseGameServicesApplePlugin: NSObject, FlutterPlugin {
     }
 
     func isPersonalizedCommunicationRestricted(result: @escaping FlutterResult) {
-        if #available(iOS 14.0, *) {
+        if #available(iOS 14.0, *), #available(macOS 11.0, *) {
         result(GKLocalPlayer.local.isPersonalizedCommunicationRestricted)
         } else {
         result("Not supported.")
@@ -409,7 +415,7 @@ extension SwiftFirebaseGameServicesApplePlugin: GKGameCenterControllerDelegate {
     #if os(iOS)
       self.viewController?.dismiss(animated: true, completion: nil)
     #else
-      self.viewController.dismiss(true)
+      self.viewController?.dismiss(true)
     #endif
   }
 }
