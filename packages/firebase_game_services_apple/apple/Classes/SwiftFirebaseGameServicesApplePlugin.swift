@@ -86,7 +86,11 @@ public class SwiftFirebaseGameServicesApplePlugin: NSObject, FlutterPlugin {
         }
 
     public static func register(with registrar: FlutterPluginRegistrar) {
+	    #if os(iOS)
+		let channel = FlutterMethodChannel(name: "firebase_game_services", binaryMessenger: registrar.messenger())
+	    #else
 		let channel = FlutterMethodChannel(name: "firebase_game_services", binaryMessenger: registrar.messenger)
+	    #endif
         let instance = SwiftFirebaseGameServicesApplePlugin()
         registrar.addMethodCallDelegate(instance, channel: channel)
     }
