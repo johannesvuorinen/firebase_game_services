@@ -12,11 +12,17 @@ dependencies:
     sdk: flutter
 
   firebase_game_services_platform_interface:
-    path: ../firebase_game_services_platform_interface/
+    git: 
+      url: https://github.com/johannesvuorinen/firebase_game_services
+      path: ./packages/firebase_game_services_platform_interface/
   firebase_game_services_apple:
-    path: ../firebase_game_services_apple/
+    git: 
+      url: https://github.com/johannesvuorinen/firebase_game_services
+      path: ./packages/firebase_game_services_apple/
   firebase_game_services_google:
-    path: ../firebase_game_services_google/
+    git: 
+      url: https://github.com/johannesvuorinen/firebase_game_services
+      path: ./packages/firebase_game_services_google/
 
 dev_dependencies:
   flutter_test:
