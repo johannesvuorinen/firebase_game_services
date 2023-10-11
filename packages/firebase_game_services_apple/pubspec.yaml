@@ -12,7 +12,8 @@ dependencies:
     sdk: flutter
 
   firebase_game_services_platform_interface:
-    git: https://github.com/johannesvuorinen/firebase_game_services
+    git: 
+      url: https://github.com/johannesvuorinen/firebase_game_services
       path: ./packages/firebase_game_services_platform_interface/
 
 dev_dependencies:
