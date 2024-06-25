@@ -98,6 +98,59 @@ class FirebaseGameServicesGooglePlugin(private var activity: Activity? = null) :
 
         // Doc Ref: https://developers.google.com/games/services/android/signin#request_server_side_access
         val gamesSignInClient = PlayGames.getGamesSignInClient(activity)
+
+
+        // If we have user already, link to it!
+        if(auth.currentUser != null) {
+            Log.i("INFO: ", "LINK TO EXISTING USER")
+
+            gamesSignInClient.requestServerSideAccess(authCode, false).addOnCompleteListener { task1 ->
+                if (task1.isSuccessful) {
+                    val serverAuthToken = task1.result
+
+                    val credential = PlayGamesAuthProvider.getCredential(serverAuthToken!!)
+                    auth.currentUser?.linkWithCredential(credential)?.addOnCompleteListener { task2 ->
+                        if (task2.isSuccessful) {
+                            pendingResult?.success(task2.isSuccessful)
+                        } else {
+                            Log.e("Error:", task2.exception.toString())
+                            pendingResult?.success(task2.isSuccessful)
+                        }
+                    }
+                } else {
+                    // Failed to retrieve authentication code.
+                    Log.e("Error:", task1.exception.toString())
+                    pendingResult?.success(task1.isSuccessful)
+                }
+            }
+        }
+        else {
+            Log.i("INFO: ", "NEW LOGIN")
+
+            gamesSignInClient.requestServerSideAccess(authCode, false).addOnCompleteListener { task1 ->
+                if (task1.isSuccessful) {
+                    val serverAuthToken = task1.result
+
+                    val credential = PlayGamesAuthProvider.getCredential(serverAuthToken!!)
+
+                    auth.signInWithCredential(credential).addOnCompleteListener { task2 ->
+                        if (task2.isSuccessful) {
+                            pendingResult?.success(task2.isSuccessful)
+                        } else {
+                            Log.e("Error:", task2.exception.toString())
+                            pendingResult?.success(task2.isSuccessful)
+                        }
+                    }
+                } else {
+                    // Failed to retrieve authentication code.
+                    Log.e("Error:", task1.exception.toString())
+                    pendingResult?.success(task1.isSuccessful)
+                }
+            }
+        }
+
+        // OLD BUGGY CODE
+        /*
         gamesSignInClient.requestServerSideAccess(authCode, false).addOnCompleteListener { task1 ->
             if (task1.isSuccessful) {
                 val serverAuthToken = task1.result
@@ -131,6 +184,7 @@ class FirebaseGameServicesGooglePlugin(private var activity: Activity? = null) :
                     }
                 }
             }
+        */
     }
     //endregion
 
